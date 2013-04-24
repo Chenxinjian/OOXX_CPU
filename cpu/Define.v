@@ -16,6 +16,6 @@
 `define ALUFN_OR	4'h7
 `define ALUFN_XOR	4'h8
 `define ALUFN_NOR	4'h9
+`define ALUFN_SLT	4'ha
+`define ALUFN_SLTU	4'hb
 
-`define ALUFN_SEQ	4'b1000
-`define ALUFN_SNE	4'b1100

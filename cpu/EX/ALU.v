@@ -1,16 +1,13 @@
 `include "Define.v"
 
 
-module ALU(In1, In2, Out, Gz, Ez, Lz, Eq, ALUFn);
+module ALU(In1, In2, Out, Cond, ALUFn);
 	input wire[31:0]	In1, In2;
 	input wire[ 3:0]	ALUFn;
 	output reg[31:0]	Out;
-	output wire	Gz, Ez, Lz, Eq;
+	output wire[5:0]	Cond;
 
-	assign Ez = In1 == 32'b0;
-	assign Lz = In1[31] == 1'b1;
-	assign Gz = (In1[31] == 1'b0) && ~Ez;
-	assign Eq = In1 == In2;
+	assign Cond = {In1 < In2, In1 == In2, In1 > In2, In1[31], In1 == 32'b0, In1[31]==0 && In1 != 0};
 
 	always @(In1 or In2 or ALUFn) begin
 		case (ALUFn)

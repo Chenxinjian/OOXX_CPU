@@ -14,7 +14,7 @@ module RD(Rst, Clk, Instruction, PCValP4,
 	output wire	RegWr, MemWr, ALUSrc1, ALUSrc2, RegWSrc;
 	output wire[31:0]	RsVal, RtVal, Immediate, NewPCVal;
 	output wire[ 3:0]	ALUFn;
-	output wire BCond;
+	output wire[ 5:0]	BCond;
 
 	wire RegWDst, SignExtend;
 
@@ -22,11 +22,12 @@ module RD(Rst, Clk, Instruction, PCValP4,
 	assign Rt = Instruction[20:16];
 	assign Rd = RegWDst ? Instruction[20:16] : Instruction[15:11];
 	assign Immediate = {{16{SignExtend & Instruction[15]}}, Instruction[15:0]};
+	assign NewPCVal = PCValP4 + {Immediate[29:0], 2'b0};
 
 	GReg register(Rst, Clk, Rs, Rt, WB_Rd, 
 					WB_RegWVal,	WB_RegWr, RsVal, RtVal);
 
 	IDecoder decoder(Instruction, RegWr, RegWSrc, RegWDst,
-					ALUSrc1, ALUSrc2, ALUFn, MemWr, SignExtend, Shamt);
+					ALUSrc1, ALUSrc2, ALUFn, MemWr, SignExtend, Shamt, BCond);
 
 endmodule

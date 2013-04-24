@@ -9,8 +9,9 @@ module CPU(Rst, Clk);
 
 	wire[31:0] PCVal;
 	wire[31:0] PCValP4;
+	wire[31:0]	_PCVal;
 	
-	PC pc(Rst, Clk, PCVal, PCValP4, 32'b0, 1'b0);
+	PC pc(Rst, Clk, PCVal, PCValP4, _PCVal);
 
 	reg[31:0]	ICacheReg1;
 	reg[31:0]	ICacheReg2;
@@ -18,7 +19,7 @@ module CPU(Rst, Clk);
 	TempCache icache(Rst, Clk, ICacheReg1[31:0], 32'b0, Instruction, 1'b0);
 
 	always @(negedge Clk) begin
-		ICacheReg1 <= PCVal;
+		ICacheReg1 <= _PCVal;
 		ICacheReg2 <= Instruction;
 	end
 
@@ -41,13 +42,13 @@ module CPU(Rst, Clk);
 	wire	RegWr, MemWr, ALUSrc1, ALUSrc2, RegWSrc;
 	wire[31:0]	RsVal, RtVal, Immediate, NewPCVal;
 	wire[ 3:0]	ALUFn;
-	wire BCond;
+	wire[ 5:0]	BCond;
 
 	reg[ 4:0]	EX_Rs, EX_Rt, EX_Rd, EX_Shamt;
 	reg	EX_RegWr, EX_MemWr, EX_ALUSrc1, EX_ALUSrc2, EX_RegWSrc;
 	reg[31:0]	EX_RsVal, EX_RtVal, EX_Immediate, EX_NewPCVal;
 	reg[ 3:0]	EX_ALUFn;
-	reg EX_BCond;
+	reg[ 5:0]	EX_BCond;
 
 	always @(negedge Rst or posedge Clk) begin
 		if (Rst == 1'b0) begin
@@ -75,8 +76,10 @@ module CPU(Rst, Clk);
 	EX ex(EX_Shamt, EX_ALUSrc1, EX_ALUSrc2, _EX_RsVal, _EX_RtVal, 
 				EX_Immediate, EX_ALUFn, ALUOut, Cond);
 
+	Branch branch(PCVal, EX_NewPCVal, _PCVal, EX_BCond, Cond);
+
 	wire[31:0]	ALUOut;
-	wire	Cond;
+	wire[5:0]	Cond;
 
 	reg[ 4:0]	MM_Rd;
 	reg	MM_RegWr, MM_MemWr, MM_RegWSrc;

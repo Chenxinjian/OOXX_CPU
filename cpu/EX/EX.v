@@ -9,11 +9,11 @@ module EX(EX_Shamt, EX_ALUSrc1, EX_ALUSrc2,
 	input wire[ 3:0]	EX_ALUFn;
 
 	output wire[31:0]	ALUOut;
-	output wire	Cond;
+	output wire[5:0]	Cond;
 
 	wire Gz, Ez, Lz, Eq;
 
 	wire[31:0] ALUIn1 = EX_ALUSrc1 ? EX_Shamt : EX_RsVal;
 	wire[31:0] ALUIn2 = EX_ALUSrc2 ? EX_Immediate : EX_RtVal;
-	ALU alu(ALUIn1, ALUIn2, ALUOut, Gz, Ez, Lz, Eq, EX_ALUFn);
+	ALU alu(ALUIn1, ALUIn2, ALUOut, Cond, EX_ALUFn);
 endmodule

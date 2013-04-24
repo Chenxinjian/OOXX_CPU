@@ -10,7 +10,7 @@ module TestBench;
 		Rst = 1'b0;
 		# 10
 		Rst = 1'b1;
-		# 100
+		# 500
 		$finish;
 	end
 
